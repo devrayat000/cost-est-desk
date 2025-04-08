@@ -1,0 +1,23 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capability for the main window",
+  "windows": ["main", "init"],
+  "permissions": [
+    "core:default",
+    "opener:default",
+    "sql:default",
+    "sql:allow-execute",
+    "upload:default",
+    {
+      "identifier": "http:default",
+      "allow": [{ "url": "http://localhost:*" }],
+      "deny": [{ "url": "https://private.tauri.app" }]
+    },
+    "fs:default",
+    "fs:allow-app-write",
+    "fs:allow-download-write-recursive",
+    "fs:allow-write-text-file",
+    "store:default"
+  ]
+}
