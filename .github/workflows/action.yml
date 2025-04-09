@@ -63,5 +63,6 @@ jobs:
           releaseName: "App v__VERSION__"
           releaseBody: "See the assets to download this version and install."
           releaseDraft: true
+          distPath: "dist" # or whatever your frontend output folder is
           prerelease: false
           args: ${{ matrix.args }}
