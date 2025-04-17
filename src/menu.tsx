@@ -1,4 +1,7 @@
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
+import { pdf } from "@react-pdf/renderer";
+import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
+import PrintingDocument from "./components/menu/pdf";
 
 const open = await MenuItem.new({
   id: "open",
@@ -61,6 +64,37 @@ const select_all = await PredefinedMenuItem.new({
   item: "SelectAll",
 });
 
+const print = await MenuItem.new({
+  id: "print",
+  text: "Print",
+  async action() {
+    // const sections = getDefaultStore().get(formAtom);
+    const document = pdf(
+      <PrintingDocument
+      // sections={sections}
+      />
+    );
+
+    const blob = await document.toBlob();
+    console.log(blob);
+    const url = URL.createObjectURL(blob);
+    const webview = new WebviewWindow("pdf_print", {
+      url: url,
+      title: "PDF Print",
+      closable: true,
+      resizable: true,
+      decorations: true,
+    });
+    webview.once("tauri://close-requested", () => {
+      URL.revokeObjectURL(url);
+    });
+
+    webview.once("tauri://error", (e) => {
+      console.error("❌ Failed to create Webview:", e);
+    });
+  },
+});
+
 const menu = await Menu.new({
   id: "main",
   items: [
@@ -95,6 +129,8 @@ const menu = await Menu.new({
             },
           ],
         },
+        separator,
+        print,
       ],
     },
     {

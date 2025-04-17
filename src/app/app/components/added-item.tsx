@@ -1,4 +1,4 @@
-import { Group, Table } from "@mantine/core";
+import { Group, NumberFormatter, Table } from "@mantine/core";
 import EditableInput from "./editable-input";
 import { useFormContext } from "./form";
 
@@ -21,7 +21,7 @@ export default function AddedItem({
         <Group justify="flex-end">
           <EditableInput
             placeholder="e.g. 200"
-            type="number"
+            // type="number"
             w="100%"
             styles={{ input: { textAlign: "right" } }}
             key={form.key(`sections.${section}.items.${item}.quantity`)}
@@ -35,7 +35,7 @@ export default function AddedItem({
         <Group justify="flex-end">
           <EditableInput
             placeholder="e.g. 200"
-            type="number"
+            // type="number"
             w="100%"
             styles={{ input: { textAlign: "right" } }}
             leftSection={"$"}
@@ -47,12 +47,13 @@ export default function AddedItem({
         </Group>
       </Table.Td>
       <Table.Td ta="right" w={120}>
-        $
-        {new Intl.NumberFormat("en-us", {
-          currency: "USD",
-          currencySign: "standard",
-          maximumFractionDigits: 2,
-        }).format((addedItem.quantity ?? 0) * (addedItem.unitPrice ?? 0))}
+        <NumberFormatter
+          prefix="$ "
+          value={(addedItem.quantity ?? 0) * (addedItem.unitPrice ?? 0)}
+          thousandSeparator
+          fixedDecimalScale
+          decimalScale={2}
+        />
       </Table.Td>
     </Table.Tr>
   );

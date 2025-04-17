@@ -17,12 +17,12 @@ export default defineConfig(async () => ({
     },
   },
   build: {
-    // rollupOptions: {
-    //   input: {
-    //     index: path.resolve(__dirname, "app.html"),
-    //     // init: path.resolve(__dirname, "init.html"),
-    //   },
-    // },
+    rollupOptions: {
+      input: {
+        index: path.resolve(__dirname, "app.html"),
+        // init: path.resolve(__dirname, "init.html"),
+      },
+    },
     target: "esnext",
   },
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`

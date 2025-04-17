@@ -1,6 +1,6 @@
 import { createFormContext } from "@mantine/form";
 
-interface PayCategory {
+export interface PayCategory {
   code: string;
   name: string;
   items: InvoiceItem[];

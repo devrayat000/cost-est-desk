@@ -6,50 +6,19 @@ import {
   Box,
   Title,
   Paper,
+  NumberFormatter,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import SectionSelector from "./components/section-selector";
 import ItemSelector from "./components/item-selector";
 import AddedItem from "./components/added-item";
 import { FormProvider, Invoice } from "./components/form";
-
-// const renderAutocompleteOption: AutocompleteProps["renderOption"] = (input) => {
-//   const item = items.get(input.option.value);
-
-//   if (!item) {
-//     return null;
-//   }
-
-//   return (
-//     <Stack gap={0} style={{ width: "100%" }}>
-//       <Group justify="space-between">
-//         <Text>{input.option.value}</Text>
-//         <Text size="sm" c="dimmed">
-//           {item.unit}
-//         </Text>
-//       </Group>
-//       <Text size="xs" c="dimmed">
-//         {item.description}
-//       </Text>
-//     </Stack>
-//   );
-// };
-
-// const optionsFilter: OptionsFilter = ({ search, limit }) => {
-//   const splittedSearch = search.toLowerCase().trim().split(" ");
-
-//   return (payItems as PayItem[])
-//     .filter((option) => {
-//       const words = option.description.toLowerCase().trim().split(" ");
-//       return splittedSearch.every(
-//         (searchWord) =>
-//           option.itemNumber.includes(searchWord) ||
-//           words.some((word) => word.includes(searchWord))
-//       );
-//     })
-//     .slice(0, limit)
-//     .map((val) => ({ label: val.itemNumber, value: val.itemNumber }));
-// };
+import TotalCost from "./components/total";
+import { useEffect } from "react";
+import { useSetAtom } from "jotai";
+import { formAtom } from "./store";
+import { PDFViewer } from "@react-pdf/renderer";
+import PrintingDocument from "@/components/menu/pdf";
 
 export default function AppPage() {
   const form = useForm<Invoice>({
@@ -59,7 +28,12 @@ export default function AppPage() {
     mode: "controlled",
   });
 
-  console.log(form.values.sections);
+  const setForm = useSetAtom(formAtom);
+
+  // form.watch("sections", ({ value }) => setForm(value));
+  useEffect(() => {
+    setForm(form.values.sections);
+  }, [form.values]);
 
   return (
     <Box mx="lg" my="xl">
@@ -107,19 +81,18 @@ export default function AppPage() {
                             Total
                           </Table.Td>
                           <Table.Td ta="right">
-                            $
-                            {new Intl.NumberFormat("en-us", {
-                              currency: "USD",
-                              currencySign: "standard",
-                              maximumFractionDigits: 2,
-                            }).format(
-                              section.items.reduce(
+                            <NumberFormatter
+                              prefix="$ "
+                              value={section.items.reduce(
                                 (prev, curr) =>
                                   (curr.quantity ?? 0) * (curr.unitPrice ?? 0) +
                                   prev,
                                 0
-                              )
-                            )}
+                              )}
+                              thousandSeparator
+                              fixedDecimalScale
+                              decimalScale={2}
+                            />
                           </Table.Td>
                         </Table.Tr>
                       </Table.Tfoot>
@@ -128,11 +101,17 @@ export default function AppPage() {
                 </Paper>
               );
             })}
+            <TotalCost />
             <Paper p="lg" key="add-section">
               <SectionSelector />
             </Paper>
           </Stack>
         </FormProvider>
+        {/* <Paper radius={0}>
+          <PDFViewer style={{ width: "100%", height: "50vh" }}>
+            <PrintingDocument />
+          </PDFViewer>
+        </Paper> */}
       </Container>
     </Box>
   );

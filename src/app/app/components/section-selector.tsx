@@ -12,7 +12,6 @@ import { useCallback, useMemo } from "react";
 
 async function getCategories() {
   const categories = await db.query.categories.findMany();
-  console.log(categories);
   return categories;
 }
 

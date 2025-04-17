@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react";
 import classes from "./editable-input.module.css";
-import { TextInput, TextInputProps } from "@mantine/core";
+import { NumberInputProps, NumberInput } from "@mantine/core";
 
-export default function EditableInput(props: TextInputProps) {
+export default function EditableInput(props: NumberInputProps) {
   const [editable, setEditable] = useState(true);
 
   const enableEditing = useCallback(() => {
@@ -14,7 +14,7 @@ export default function EditableInput(props: TextInputProps) {
   }, []);
 
   return (
-    <TextInput
+    <NumberInput
       {...props}
       onBlur={(event) => {
         props.onBlur?.(event);
@@ -25,6 +25,9 @@ export default function EditableInput(props: TextInputProps) {
       onDoubleClick={enableEditing}
       contentEditable={editable}
       classNames={{ input: classes.input }}
+      decimalScale={2}
+      fixedDecimalScale
+      hideControls
     />
   );
 }

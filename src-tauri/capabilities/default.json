@@ -5,6 +5,8 @@
   "windows": ["main", "init"],
   "permissions": [
     "core:default",
+    "core:webview:default",
+    "core:webview:allow-create-webview-window",
     "opener:default",
     "sql:default",
     "sql:allow-execute",
