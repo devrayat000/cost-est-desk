@@ -77,7 +77,7 @@ fn close_init(app: AppHandle) -> String {
 // An async function that does some heavy setup task
 async fn setup(app: AppHandle) -> Result<(), ()> {
     let store = app.store(get_env("STORE_URL")).map_err(|_| ())?;
-    store.clear();
+    // store.clear();
     // Note that values must be serde_json::Value instances,
     // otherwise, they will not be compatible with the JavaScript bindings.
     if store.has("productKey") {
