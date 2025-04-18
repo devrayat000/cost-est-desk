@@ -26,6 +26,11 @@ export default function InitPage() {
   const { mutateAsync: validateAsync, isPending } = useMutation({
     mutationKey: ["product-key-validation"],
     mutationFn: async ({ productKey }: { productKey: string }) => {
+      if (import.meta.env.PROD) {
+        const { default: mNumbers } = await import("@/assets/mNumbers.json");
+        return mNumbers;
+      }
+
       const response = await fetch(
         "http://localhost:3000/api/product/validate",
         {
@@ -49,7 +54,7 @@ export default function InitPage() {
       await queryClient.setQueryData(["product-data"], data);
       console.log("Data saved to store");
       await new Promise((resolve) => setTimeout(resolve, 500));
-      //   await migrateDb();
+      await migrateDb();
       console.log("Database migrated");
       await new Promise((resolve) => setTimeout(resolve, 500));
       await seedData(data);
